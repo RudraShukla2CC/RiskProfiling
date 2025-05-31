@@ -1,0 +1,41 @@
+{
+  "type": "Capacity",
+  "questions": [
+    {
+      "questionText": "You are able to save money regularly.",
+      "weight": 1,
+      "answers": [
+        {"answerText": "Completely false", "score": 1},
+        {"answerText": "Somewhat true", "score": 2},
+        {"answerText": "Completely true", "score": 3}
+      ]
+    },
+    {
+      "questionText": "You can pay all your monthly bills on time -- including any credit card or other debt.",
+      "weight": 1,
+      "answers": [
+        {"answerText": "Completely false", "score": 1},
+        {"answerText": "Somewhat true", "score": 2},
+        {"answerText": "Completely true", "score": 3}
+      ]
+    },
+    {
+      "questionText": "If you lose money investing today, your current lifestyle would not be impacted.",
+      "weight": 1,
+      "answers": [
+        {"answerText": "Completely false", "score": 1},
+        {"answerText": "Somewhat true", "score": 2},
+        {"answerText": "Completely true", "score": 3}
+      ]
+    },
+    {
+      "questionText": "You do not need to draw down more than 5% of your investment portfolio for any major financial goal in the next five years.",
+      "weight": 1,
+      "answers": [
+        {"answerText": "Completely false", "score": 1},
+        {"answerText": "Somewhat true", "score": 2},
+        {"answerText": "Completely true", "score": 3}
+      ]
+    }
+  ]
+}

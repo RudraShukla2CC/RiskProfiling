@@ -1,0 +1,35 @@
+{
+  "type": "Tolerance",
+  "questions": [
+    {
+      "questionText": "In general, how would your best friend describe you as a risk taker?",
+      "weight": 2,
+      "answers": [
+        {"answerText": "A real gambler", "score": 4},
+        {"answerText": "Willing to take risks after completing adequate research", "score": 3},
+        {"answerText": "Cautious", "score": 2},
+        {"answerText": "A real risk avoider", "score": 1}
+      ]
+    },
+    {
+      "questionText": "You are on a TV game show and can choose one of the following. Which would you take?",
+      "weight": 1,
+      "answers": [
+        {"answerText": "$1,000 in cash", "score": 1},
+        {"answerText": "A 50% chance at winning $5,000", "score": 2},
+        {"answerText": "A 25% chance at winning $10,000", "score": 3},
+        {"answerText": "A 5% chance at winning $100,000", "score": 4}
+      ]
+    },
+    {
+      "questionText": "When you think of the word risk which of the following words comes to mind first?",
+      "weight": 1,
+      "answers": [
+        {"answerText": "Loss", "score": 1},
+        {"answerText": "Uncertainty", "score": 2},
+        {"answerText": "Opportunity", "score": 3},
+        {"answerText": "Thrill", "score": 4}
+      ]
+    }
+  ]
+}
