@@ -35,10 +35,10 @@ export interface ScoreWithCategoryResponse {
 
 export type RiskType = 'tolerance' | 'capacity';
 
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
-// API Client Class
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/risk';
+
+
 class RiskProfilingAPI {
   private baseUrl: string;
 
@@ -54,9 +54,6 @@ class RiskProfilingAPI {
     return response.json();
   }
 
-  /**
-   * Fetch questions for a specific risk type
-   */
   async getQuestions(riskType: RiskType): Promise<QuestionnaireGetResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/questions/${riskType}`, {
@@ -73,9 +70,6 @@ class RiskProfilingAPI {
     }
   }
 
-  /**
-   * Submit answers and get risk score
-   */
   async submitAnswers(
     riskType: RiskType, 
     answers: UserAnswer[]
@@ -96,9 +90,6 @@ class RiskProfilingAPI {
     }
   }
 
-  /**
-   * Get both tolerance and capacity questions
-   */
   async getAllQuestions(): Promise<{
     tolerance: QuestionnaireGetResponse;
     capacity: QuestionnaireGetResponse;
@@ -116,9 +107,7 @@ class RiskProfilingAPI {
     }
   }
 
-  /**
-   * Submit both tolerance and capacity answers
-   */
+
   async submitAllAnswers(data: {
     toleranceAnswers: UserAnswer[];
     capacityAnswers: UserAnswer[];
@@ -140,10 +129,8 @@ class RiskProfilingAPI {
   }
 }
 
-// Create singleton instance
 export const riskProfilingAPI = new RiskProfilingAPI();
 
-// Custom hooks for React components
 export interface UseQuestionsResult {
   data: QuestionnaireGetResponse | null;
   loading: boolean;
@@ -179,7 +166,6 @@ export interface UseSubmitAllAnswersResult {
   error: string | null;
 }
 
-// Utility functions
 export const getRiskCategoryColor = (category: string): string => {
   switch (category.toLowerCase()) {
     case 'low':
@@ -239,7 +225,6 @@ export const validateAnswers = (
     }
   });
 
-  // Check for duplicate question indices
   const questionIndices = answers.map(a => a.questionIndex);
   const uniqueIndices = new Set(questionIndices);
   if (uniqueIndices.size !== questionIndices.length) {
