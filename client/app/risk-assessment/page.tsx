@@ -13,9 +13,9 @@ import {
   UserAnswer, 
   ScoreWithCategoryResponse,
   validateAnswers,
-} from '@/lib/riskProfiling';
-import LoadingSpinner from '@/components/ui/landing/LoadingSpinner';
-import ResultsDisplay from '@/components/ui/landing/ResultDisplay';
+} from '@/lib/riskProfiling/risk';
+import LoadingSpinner from '@/components/landing/LoadingSpinner';
+import ResultsDisplay from '@/components/landing/ResultDisplay';
 
 interface AssessmentState {
   toleranceQuestions: QuestionnaireGetResponse | null;
