@@ -349,7 +349,7 @@ Disclaimer: This analysis is for informational purposes only.
                       >
                         {searchResults.slice(0, 10).map((item, index) => (
                           <motion.button
-                            key={item.symbol}
+                            key={`${item.symbol}-${index}`}
                             type="button"
                             onClick={() => toggleTicker(item.symbol)}
                             className={`w-full text-left p-4 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0 ${selectedTickers.includes(item.symbol) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
