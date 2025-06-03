@@ -518,13 +518,13 @@ Disclaimer: This analysis is for informational purposes only.
                           <div className="text-lg font-bold text-purple-900">{portfolio.riskBucket}</div>
                         </div>
                         <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
-                          <div className="text-sm text-green-600 font-medium mb-1">Expected Return</div>
+                          <div className="text-sm text-green-600 font-medium mb-1">Expected Return (Per Annum)</div>
                           <div className="text-lg font-bold text-green-900">
                             {(portfolio.expectedReturn * 100).toFixed(2)}%
                           </div>
                         </div>
                         <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl">
-                          <div className="text-sm text-orange-600 font-medium mb-1">Expected Risk</div>
+                          <div className="text-sm text-orange-600 font-medium mb-1">Expected Risk (Per Annum)</div>
                           <div className="text-lg font-bold text-orange-900">
                             {(portfolio.expectedRisk * 100).toFixed(2)}%
                           </div>

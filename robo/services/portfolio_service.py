@@ -31,11 +31,11 @@ class PortfolioService:
 
     def get_portfolio_name_and_default_return(self, riskBucket: int):
         mapping = {
-            1: ("Conservative", 0.02),
-            2: ("Moderate", 0.04),
-            3: ("Moderate Growth", 0.06),
-            4: ("Growth", 0.08),
-            5: ("Aggressive Growth", 0.12),
+            1: ("Conservative", 0.08),
+            2: ("Moderate", 0.1),
+            3: ("Moderate Growth", 0.12),
+            4: ("Growth", 0.14),
+            5: ("Aggressive Growth", 0.17),
         }
         if riskBucket not in mapping:
             raise ValueError("Invalid risk bucket")
@@ -48,7 +48,6 @@ class PortfolioService:
             data = data.dropna()
             data.columns = data.columns.droplevel(1)
         else:
-            # handling in case no MultiIndex columns (single ticker)
             data = data["Close"].to_frame()
         return data
 
