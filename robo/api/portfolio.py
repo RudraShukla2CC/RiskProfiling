@@ -1,27 +1,26 @@
 from fastapi import APIRouter, HTTPException
-from schemas.portfolio_schemas import PortfolioBuildRequest, PortfolioBuildResponse, AllocationPieData
+from schemas.portfolio_schemas import Allocation, PortfolioBuildRequest, PortfolioBuildResponse, AllocationPieData
 from services.portfolio_service import PortfolioService
 
 router = APIRouter()
 portfolio_service = PortfolioService()
 
-
 @router.post("/build", response_model=PortfolioBuildResponse)
 def build_portfolio(request: PortfolioBuildRequest):
     try:
         portfolio = portfolio_service.build_portfolio(
-            riskToleranceScore=request.riskToleranceScore,
-            riskCapacityScore=request.riskCapacityScore,
+            riskBucketCategory=request.riskBucketCategory,
             tickers=request.tickers,
-            period=request.period,
-            targetReturn=request.targetReturn,
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    labels = [allocation.ticker for allocation in portfolio.allocations]
-    values = [allocation.percentage for allocation in portfolio.allocations]
-
+    allocations = [
+        Allocation(ticker=alloc.ticker, percentage=alloc.percentage)
+        for alloc in portfolio.allocations
+    ]
+    labels = [alloc.ticker for alloc in allocations]
+    values = [alloc.percentage for alloc in allocations]
     pie_data = AllocationPieData(labels=labels, values=values)
 
     return PortfolioBuildResponse(
@@ -29,6 +28,6 @@ def build_portfolio(request: PortfolioBuildRequest):
         riskBucket=portfolio.riskBucket,
         expectedReturn=portfolio.expectedReturn,
         expectedRisk=portfolio.expectedRisk,
-        allocations=portfolio.allocations,
+        allocations=allocations,
         pieData=pie_data,
     )

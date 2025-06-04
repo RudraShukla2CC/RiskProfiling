@@ -7,7 +7,7 @@ class Allocation(BaseModel):
 
 class Portfolio(BaseModel):
     name: str
-    riskBucket: int
+    riskBucket: str
     expectedReturn: float
     expectedRisk: float
     allocations: List[Allocation]

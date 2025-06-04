@@ -51,23 +51,20 @@ def post_score(
     for ans in data.answers:
         if not (0 <= ans.questionIndex < num_questions):
             raise HTTPException(status_code=400, detail=f"Invalid questionIndex: {ans.questionIndex}")
-
         question = questions[ans.questionIndex]
-
         if not (0 <= ans.answerIndex < len(question.answers)):
             raise HTTPException(
                 status_code=400,
                 detail=f"Invalid answerIndex: {ans.answerIndex} for question {ans.questionIndex}",
             )
-
         answer_score = question.answers[ans.answerIndex].score * question.weight
         total_score += answer_score
         per_question_scores.append(QuestionScore(questionText=question.questionText, score=answer_score))
 
     # Calculate max possible score
     max_total_score = sum(max(ans.score for ans in q.answers) * q.weight for q in questions)
-    category_threshold = max_total_score / 3
 
+    category_threshold = max_total_score / 3
     if total_score <= category_threshold:
         category = "Low"
     elif total_score <= 2 * category_threshold:
@@ -75,4 +72,24 @@ def post_score(
     else:
         category = "High"
 
-    return ScoreWithCategoryResponse(totalScore=total_score, perQuestionScores=per_question_scores, category=category)
+    # New: Determine bucket ONLY for risk tolerance scores
+    bucket = None
+    if risk_type == "tolerance":
+        if 4 <= total_score <= 7:
+            bucket = "Conservative"
+        elif 8 <= total_score <= 10:
+            bucket = "Moderate"
+        elif 11 <= total_score <= 13:
+            bucket = "Growth"
+        elif 14 <= total_score <= 16:
+            bucket = "Aggressive Growth"
+        else:
+            bucket = "Out of defined range"
+
+    # Return bucket as part of response, extend your ScoreWithCategoryResponse model accordingly:
+    return ScoreWithCategoryResponse(
+        totalScore=total_score,
+        perQuestionScores=per_question_scores,
+        category=category,
+        bucket=bucket  # add this field—see next step for schema update
+    )

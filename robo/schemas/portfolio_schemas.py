@@ -1,24 +1,21 @@
-from pydantic import BaseModel, conint, confloat, constr
-from typing import List, Optional
-from models.portfolio_models import Allocation
+from pydantic import BaseModel, conint, constr
+from typing import List, Literal
 
-
-class PortfolioBuildRequest(BaseModel):
-    riskToleranceScore: conint(ge=0, le=100) # type: ignore
-    riskCapacityScore: conint(ge=0, le=100) # type: ignore
-    tickers: constr(min_length=1)  # type: ignore # e.g. "SPY TLT AAPL GOOG MSFT"
-    period: Optional[constr()] = "20y" # type: ignore
-    targetReturn: Optional[confloat(ge=0.0, le=1.0)] = None  # type: ignore # override expected return
-
+class Allocation(BaseModel):
+    ticker: str
+    percentage: float
 
 class AllocationPieData(BaseModel):
     labels: List[str]
     values: List[float]
 
+class PortfolioBuildRequest(BaseModel):
+    riskBucketCategory: Literal["Conservative", "Moderate", "Growth", "Aggressive Growth"]
+    tickers: constr(min_length=1) # type: ignore
 
 class PortfolioBuildResponse(BaseModel):
     name: str
-    riskBucket: int
+    riskBucket: str  # using str to represent bucket name
     expectedReturn: float
     expectedRisk: float
     allocations: List[Allocation]

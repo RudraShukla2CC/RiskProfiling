@@ -31,6 +31,7 @@ export interface ScoreWithCategoryResponse {
   totalScore: number;
   perQuestionScores: QuestionScore[];
   category: 'Low' | 'Medium' | 'High';
+  bucket?: string; 
 }
 
 export type RiskType = 'tolerance' | 'capacity';

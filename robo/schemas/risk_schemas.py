@@ -1,10 +1,10 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, conint
 
 
 class QuestionAnswersSchema(BaseModel):
-    questionIndex: conint(ge=0)
-    answerIndex: conint(ge=0)
+    questionIndex: conint(ge=0) # type: ignore
+    answerIndex: conint(ge=0) # type: ignore
 
 
 class QuestionnaireResponse(BaseModel):
@@ -34,3 +34,4 @@ class ScoreWithCategoryResponse(BaseModel):
     totalScore: int
     perQuestionScores: List[QuestionScore]
     category: str
+    bucket: Optional[str] = None 

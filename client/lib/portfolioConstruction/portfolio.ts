@@ -11,11 +11,8 @@ export interface AllocationPieData {
 }
 
 export interface PortfolioBuildRequest {
-  riskToleranceScore: number;
-  riskCapacityScore: number;
+  riskBucketCategory: string;
   tickers: string;
-  period: string;
-  targetReturn?: number;
 }
 
 export interface PortfolioBuildResponse {

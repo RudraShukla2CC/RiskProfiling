@@ -257,7 +257,7 @@ export default function RiskAssessmentPage() {
   const selectedAnswerIndex = currentAnswers[state.currentQuestionIndex]?.answerIndex ?? -1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-auto">
       <div 
         className="absolute inset-0 opacity-20"
         style={{
