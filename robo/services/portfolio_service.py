@@ -48,6 +48,9 @@ class PortfolioService:
         mu = expected_returns.mean_historical_return(df)
         S = risk_models.sample_cov(df)
         max_return = mu.max()
+        print(mu)
+        print(S)
+        print(max_return)
         target_returns = [r for r in target_returns if r <= max_return]
         if not target_returns:
             raise ValueError(f"No feasible target returns for bucket '{riskBucketCategory}'. Max return is {max_return:.4f}")

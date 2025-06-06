@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award } from 'lucide-react';
+import { Award, DollarSign } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { ScoreWithCategoryResponse } from '@/lib/riskProfiling/risk';
 import RiskScoreCards from './RiskScoreCards';
 import RiskCategorySelector from './RiskCategorySelector';
@@ -15,14 +16,14 @@ interface ResultsDisplayProps {
     capacity: ScoreWithCategoryResponse;
   };
   onRestart: () => void;
+  annualIncome: number;
+  recommendedInvestmentRange: string;
 }
 
-export default function ResultsDisplay({ results, onRestart }: ResultsDisplayProps) {
+export default function ResultsDisplay({ results, onRestart, annualIncome, recommendedInvestmentRange }: ResultsDisplayProps) {
   const { tolerance, capacity } = results;
   const [portfolio, setPortfolio] = useState<any>(null);
   
-  
-  // Initialize with the bucket from tolerance, fallback to 'Moderate' if not available
   const [selectedRiskCategory, setSelectedRiskCategory] = useState<string>(
     tolerance.bucket || 'Moderate'
   );
@@ -42,7 +43,6 @@ export default function ResultsDisplay({ results, onRestart }: ResultsDisplayPro
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden py-8 px-6">
-      {/* Background Pattern */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -53,10 +53,9 @@ export default function ResultsDisplay({ results, onRestart }: ResultsDisplayPro
         }}
       />
 
-      <div className="relative z-10">
-        {/* Header */}
+      <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
-          className="max-w-6xl mx-auto text-center mb-12"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -69,26 +68,44 @@ export default function ResultsDisplay({ results, onRestart }: ResultsDisplayPro
           </p>
         </motion.div>
 
-        {/* Risk Score Cards Component */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <Card className="bg-white/90 backdrop-blur-sm border-blue-100 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-4">
+                <DollarSign className="h-8 w-8 text-blue-600" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Recommended Investment Amount
+                  </h3>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {recommendedInvestmentRange}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Based on your annual income of ${annualIncome.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         <RiskScoreCards tolerance={tolerance} capacity={capacity} />
 
-        {/* Risk Category Selector - Only show if no portfolio built yet */}
-         (
-          <RiskCategorySelector
-            selectedCategory={selectedRiskCategory}
-            onCategoryChange={handleCategoryChange}
-          />
-        )
+        <RiskCategorySelector
+          selectedCategory={selectedRiskCategory}
+          onCategoryChange={handleCategoryChange}
+        />
 
-        {/* Portfolio Construction - Only show if no portfolio built yet */}
-         (
         <PortfolioAllocation
           selectedRiskCategory={selectedRiskCategory}
           onPortfolioBuilt={handlePortfolioBuilt}
         />
-      )
 
-        {/* Portfolio Results - Only show after portfolio is built */}
         {portfolio && (
           <PortfolioResults
             portfolio={portfolio}

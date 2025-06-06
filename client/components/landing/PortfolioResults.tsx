@@ -12,14 +12,43 @@ interface PortfolioResultsProps {
     riskBucket: string | number;
     expectedReturn: number;
     expectedRisk: number;
-    allocations: { ticker: string; percentage: number }[];
+    allocations: { 
+      ticker: string; 
+      percentage: number; 
+      category?: string; 
+    }[];
   };
   onRestart: () => void;
 }
 
 const COLORS = ['#4f46e5', '#16a34a', '#f59e0b', '#dc2626', '#2563eb', '#db2777', '#d97706', '#059669'];
 
+// Ticker to category mapping for fallback
+const TICKER_CATEGORY_MAP: Record<string, string> = {
+  'SPY': 'Large Cap',
+  'IJH': 'Mid Cap',
+  'IWM': 'Small Cap',
+  'BND': 'Broad U.S. Bond Market',
+  'GLD': 'Gold',
+  'SLV': 'Silver',
+  'VNQ': 'REIT ETF',
+  'FSMSX': 'Multi-Strategy Alternatives',
+  'LTAFX': 'Alternative Strategies',
+  'QALAX': 'Quantified Alternatives',
+  'GMAMX': 'Goldman Sachs Multi-Strategy',
+  'AAACX': 'Alpha Alternative Assets',
+  'VFLEX': 'First Trust Alternative Opportunities',
+  'NALFX': 'New Alternatives',
+  'BTC-USD': 'Cryptocurrency',
+};
+
 export default function PortfolioResults({ portfolio, onRestart }: PortfolioResultsProps) {
+  // Convert allocations to display categories instead of tickers
+  const categoryAllocations = portfolio.allocations.map(allocation => ({
+    ...allocation,
+    displayName: allocation.category || TICKER_CATEGORY_MAP[allocation.ticker] || allocation.ticker,
+  }));
+
   const handleDownloadPDF = () => {
     const report = `
 Portfolio Analysis Report
@@ -30,10 +59,12 @@ Risk Bucket: ${portfolio.riskBucket}
 Expected Return: ${(portfolio.expectedReturn * 100).toFixed(2)}%
 Expected Risk: ${(portfolio.expectedRisk * 100).toFixed(2)}%
 
-Allocations:
-${portfolio.allocations.map(a => `- ${a.ticker}: ${(a.percentage * 100).toFixed(2)}%`).join('\n')}
+Asset Allocations:
+${categoryAllocations.map(a => `- ${a.displayName}: ${(a.percentage * 100).toFixed(2)}%`).join('\n')}
 
 Disclaimer: This analysis is for informational purposes only.
+Past performance does not guarantee future results.
+Please consult with a financial advisor before making investment decisions.
 `;
 
     const blob = new Blob([report], { type: 'text/plain' });
@@ -61,7 +92,7 @@ Disclaimer: This analysis is for informational purposes only.
             </div>
             <div>
               <h3 className="text-2xl font-bold text-gray-900">Portfolio Construction</h3>
-              <p className="text-sm text-gray-500">Your optimized investment portfolio</p>
+              <p className="text-sm text-gray-500">Your optimized investment portfolio by asset categories</p>
             </div>
           </CardTitle>
         </CardHeader>
@@ -93,22 +124,27 @@ Disclaimer: This analysis is for informational purposes only.
                 </div>
               </div>
 
-              {/* Allocation List */}
+              {/* Category Allocation List */}
               <div className="space-y-3">
-                <h4 className="text-lg font-semibold text-gray-900">Asset Allocation</h4>
-                <div className="space-y-2">
-                  {portfolio.allocations.map(({ ticker, percentage }, index) => (
-                    <div key={ticker} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
+                <h4 className="text-lg font-semibold text-gray-900">Asset Category Allocation</h4>
+                <div className="space-y-3">
+                  {categoryAllocations.map(({ displayName, percentage }, index) => (
+                    <div key={displayName} className="flex items-start justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                      <div className="flex items-start space-x-3 flex-1">
                         <div
-                          className="w-4 h-4 rounded-full"
+                          className="w-4 h-4 rounded-full mt-1 flex-shrink-0"
                           style={{ backgroundColor: COLORS[index % COLORS.length] }}
                         />
-                        <span className="font-medium text-gray-900">{ticker}</span>
+                        <div className="flex-1">
+                          <span className="font-semibold text-gray-900 block">{displayName}</span>
+                          <span className="text-sm text-gray-600">Asset Category</span>
+                        </div>
                       </div>
-                      <span className="font-bold text-gray-900">
-                        {(percentage * 100).toFixed(2)}%
-                      </span>
+                      <div className="text-right">
+                        <span className="font-bold text-lg text-gray-900">
+                          {(percentage * 100).toFixed(2)}%
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -122,17 +158,21 @@ Disclaimer: This analysis is for informational purposes only.
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie
-                      data={portfolio.allocations}
+                      data={categoryAllocations.map(item => ({
+                        ...item,
+                        name: item.displayName
+                      }))}
                       dataKey="percentage"
-                      nameKey="ticker"
+                      nameKey="name"
                       cx="50%"
                       cy="50%"
                       outerRadius={120}
                       innerRadius={40}
                       paddingAngle={2}
-                      label={({ ticker, percent }) => `${ticker}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
                     >
-                      {portfolio.allocations.map((entry, index) => (
+                      {categoryAllocations.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
                           fill={COLORS[index % COLORS.length]}
@@ -148,10 +188,15 @@ Disclaimer: This analysis is for informational purposes only.
                         backgroundColor: 'white',
                         border: '1px solid #e5e7eb',
                         borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        fontSize: '14px'
                       }}
                     />
-                    <Legend />
+                    <Legend 
+                      formatter={(value) => (
+                        <span style={{ fontSize: '12px', color: '#374151' }}>{value}</span>
+                      )}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
